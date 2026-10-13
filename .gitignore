@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+
+# TypeScript incremental build info
+*.tsbuildinfo
+
+# Compiled config artifacts (generated from vite.config.ts)
+vite.config.js
+vite.config.d.ts
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+# Editor and OS cruft
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
