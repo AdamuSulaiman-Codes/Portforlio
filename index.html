@@ -1,21 +1,51 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-    <meta name="description" content="Portfolio of Adamu Sulaiman — backend/full-stack software engineer. Welcome to the lab: a dark pixel-art lair with a brain in a jar and four wired control panels to explore." />
-    <meta name="theme-color" content="#12081a" />
-    <title>Adamu Sulaiman · The Lab</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Adamu Sulaiman Muhammed — Full-stack software engineer</title>
+    <meta
+      name="description"
+      content="Adamu Sulaiman Muhammed is a full-stack software engineer in Kano, Nigeria, graduating in 2026. Java and Spring Boot services, React and TypeScript interfaces, payments, QR ticketing and applied AI. Selected work and case studies."
+    />
+    <meta name="author" content="Adamu Sulaiman Muhammed" />
+    <meta name="theme-color" content="#faf9f6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#100f0d" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Adamu Sulaiman Muhammed — Full-stack software engineer" />
+    <meta
+      property="og:description"
+      content="Java and Spring Boot services, React and TypeScript interfaces, payment settlement, QR ticketing and applied AI. Selected work and case studies."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400..500&family=Instrument+Serif:ital@0;1&display=swap"
       rel="stylesheet"
     />
     <link
       rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 12'%3E%3Crect width='10' height='12' fill='%2312081a'/%3E%3Cpath d='M5 1 L2 7 L4 7 L4 11 L8 5 L6 5 L7 1 Z' fill='%237fff6b'/%3E%3C/svg%3E"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2316150f'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' fill='%23faf9f6' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E"
     />
+
+    <script>
+      // Set the theme before first paint so there is no flash of the wrong one.
+      (function () {
+        try {
+          var saved = localStorage.getItem('as-theme')
+          var dark =
+            saved === 'dark' ||
+            (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)
+          document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light')
+        } catch (e) {
+          /* no-op: fall back to the light theme already on the element */
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

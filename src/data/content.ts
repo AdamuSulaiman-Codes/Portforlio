@@ -1,310 +1,574 @@
-import type { SectionId } from '../brain/sections'
+/**
+ * All portfolio copy lives here. Editing this file is the only thing you need
+ * to do to keep the site current.
+ *
+ * ── GitHub visibility ────────────────────────────────────────────────────────
+ * Three projects are built in private repositories. A private repo URL returns
+ * a 404 to anyone who isn't signed in as you, so linking one on a portfolio
+ * shows a recruiter a broken page. Instead, private repos render as a neutral
+ * "Private repository" chip with a working "request access" mail link.
+ *
+ * When you flip one of these repos to public on GitHub, change its
+ * `visibility: 'private'` to `visibility: 'public'` below and the GitHub button
+ * appears automatically.
+ */
 
-export interface CodeToken {
-  cls: 'cm' | 'str' | 'kw' | 'ok' | 'pl'
-  text: string
+export interface RepoRef {
+  name: string
+  url: string
+  visibility: 'public' | 'private'
 }
+
+export type ProjectLink =
+  | { kind: 'live'; label: string; href: string }
+  | { kind: 'repo'; label: string; repo: RepoRef }
+
+export type ProjectMedia =
+  | { type: 'image'; src: string; alt: string; width: number; height: number }
+  | { type: 'code'; path: string; lang: string; lines: string[] }
 
 export interface Project {
+  id: string
+  index: string
   name: string
-  slug: string
+  year: string
+  role: string
+  kicker: string
+  body: string
+  details: string[]
   stack: string[]
-  points: string[]
-  repo: string
-  code?: { path: string; lines: string[] }
+  metrics: { value: string; label: string }[]
+  links: ProjectLink[]
+  media: ProjectMedia
+  flagship?: boolean
 }
 
+/* ── Profile ─────────────────────────────────────────────────────────────── */
+
+export const PROFILE = {
+  name: 'Adamu Sulaiman Muhammed',
+  shortName: 'Adamu Sulaiman',
+  initials: 'AS',
+  role: 'Full-stack software engineer',
+  location: 'Abuja, Nigeria',
+  email: 'adamusulaiman740@gmail.com',
+  phone: '+234 816 060 3614',
+  github: 'https://github.com/AdamuSulaiman-Codes',
+  linkedin:
+    'https://www.linkedin.com/in/adamu-sulaiman-muhammed-6142ba255/',
+  status: 'Open to 2026 graduate and internship roles',
+}
+
+export const HEADLINE = {
+  lead: {
+    before: 'I build full-stack systems that ',
+    em: 'hold up',
+    after: ' in production.',
+  },
+  support:
+    'Final-year software engineering student at Skyline University Nigeria. I work across Java and Spring Boot services and the React and TypeScript interfaces that sit on top of them — API security, payment settlement, QR ticketing, and language-model features that earn their place.',
+}
+
+export const HERO_FACTS = [
+  { label: 'Based in', value: 'Abuja, Nigeria' },
+  { label: 'Studying', value: 'B.Sc. Software Engineering, 2026' },
+  { label: 'Focus', value: 'Backend · Full-stack · Applied AI' },
+  { label: 'Languages', value: 'English, Hausa' },
+]
+
+/* ── About ───────────────────────────────────────────────────────────────── */
+
 export const ABOUT: string[] = [
-  "I'm a <b>final-year Software Engineering student</b> at Skyline University Nigeria, focused on designing and shipping production-ready full-stack applications with real attention to <b>security, scalability, and user experience</b>.",
-  'I work across the entire stack — <b>Spring Boot</b> microservice backends with JWT auth and role-based access control, <b>React / TypeScript</b> frontends, PostgreSQL databases, cloud integrations, and <b>AI-powered features</b> built with LangChain4j and Groq LLaMA models.',
-  "My current research project, <b>EventHub</b>, is a secure event management platform combining payment processing, QR-code ticketing, invite-controlled registration, and LLM-driven feedback analysis.",
+  'I am in my final year of a Software Engineering degree at Skyline University Nigeria, graduating in 2026. Most of what I know came from building software that had to actually work for someone, not from following a tutorial to the end.',
+  'My work sits mostly on the backend: Java 21 and Spring Boot services, PostgreSQL schemas kept under Flyway migrations, JWT and OAuth security, and payment flows where being approximately right is the same as being wrong. I also build the interfaces those services run behind, and I care about how they feel as much as whether they compile.',
+  'Outside coursework I build tools for myself and finish them — an event platform with real payment settlement, a Telegram bot that classifies my day with a language model, and an offline focus timer for Android. The habit that has stuck is writing things down: migrations, API contracts, and the reasoning behind decisions, so the next person does not have to guess.',
 ]
 
-export const FACTS: { k: string; v: string }[] = [
-  { k: 'ROLE', v: 'Full-Stack Engineer' },
-  { k: 'FOCUS', v: 'Backend · AI · Frontend' },
-  { k: 'EDUCATION', v: 'B.Sc. Software Eng. · 2026' },
-  { k: 'LANGUAGES', v: 'English · Hausa' },
-  { k: 'CURRENTLY', v: 'DSA · System Design · Python' },
-]
+export const CURRENTLY = {
+  title: 'Right now',
+  items: [
+    'Working through data structures, algorithms and system design.',
+    'Writing more Python, mostly for data and modelling work.',
+    'Open to graduate and internship roles starting in 2026.',
+  ],
+}
 
-export const CONTACT: { label: string; value: string; href?: string }[] = [
-  { label: 'EMAIL', value: 'adamusulaiman740@gmail.com', href: 'mailto:adamusulaiman740@gmail.com' },
-  { label: 'PHONE', value: '+234 816 060 3614' },
-  { label: 'GITHUB', value: 'github.com/AdamuSulaiman-Codes', href: 'https://github.com/AdamuSulaiman-Codes' },
-]
-
-export const TICKER: string[] = [
-  'Java', 'Spring Boot', 'React 18', 'TypeScript', 'PostgreSQL',
-  'Paystack', 'LangChain4j', 'Docker', 'WebSockets', 'JWT Security',
-]
+/* ── Projects ────────────────────────────────────────────────────────────── */
 
 export const PROJECTS: Project[] = [
   {
+    id: 'eventhub',
+    index: '01',
     name: 'EventHub',
-    slug: 'eventhub',
-    stack: ['Spring Boot', 'Java', 'React 18', 'TypeScript', 'PostgreSQL', 'Paystack', 'Groq AI'],
-    points: [
-      'Secure, invite-controlled event platform — the centerpiece of my final-year research, supervised by Mr. Alex Aaron.',
-      'JWT auth with role-based access control, Paystack payments verified via HMAC-SHA512 webhooks, QR-coded tickets (ZXing + Cloudinary) checked in with a real-time scanner.',
-      'AI sentiment analysis on attendee feedback using Groq LLaMA 3.3 70B via LangChain4j; Gmail SMTP pipelines every ticket, invite, and notification.',
+    year: '2026',
+    role: 'Final-year research project · Solo full-stack build',
+    kicker:
+      'An invite-controlled event platform with real payment settlement, QR ticketing and AI feedback analysis.',
+    body: 'Nigerian organisers run paid events through WhatsApp threads, spreadsheets and manual bank transfers. EventHub puts the whole flow in one system: publish an event, invite attendees, collect payment, issue a QR ticket, and scan people in at the door.',
+    details: [
+      'JWT access tokens with rotating refresh tokens, plus Google OAuth sign-in, behind role-based access control across organiser, collaborator and attendee views.',
+      'Payments settle to the organiser’s own Paystack subaccount, verified by HMAC-SHA512 webhook signature and reconciled against the event ledger rather than trusted on the client.',
+      'QR tickets generated with ZXing and stored on Cloudinary, validated by a live check-in scanner that rejects reused tickets.',
+      'Attendee feedback is scored for sentiment by a Groq-hosted LLaMA model; tickets, invitations and receipts are delivered over Gmail SMTP.',
+      'The PostgreSQL schema is managed entirely by Flyway migrations with ddl-auto set to validate, so environments cannot drift apart.',
     ],
-    repo: '#',
-    code: {
-      path: '~/eventhub/src/main/java/.../EventService.java',
-      lines: [
-        '// attendee checks in with a scanned ticket',
-        '@Transactional',
-        'public CheckInResult checkIn(String ticketId) {',
-        '  Ticket t = ticketRepo.findByHash(ticketId)',
-        '    .orElseThrow(InvalidTicket::new);',
-        '  if (t.used()) throw new AlreadyUsed(t);',
-        '  t.markUsed();',
-        '  eventStats.increment(t.event());',
-        '  return CheckInResult.ok(t.attendee(), t.event());',
-        '}',
-        '',
-        '// payment webhook — signature verified',
-        '@PostMapping("/webhook")',
-        'public void onPayment(@RequestBody Event e) {',
-        '  verifyHmac512(e, secret);  // tamper-proof',
-        '  issueQrTicket(e);',
-        '}',
-      ],
+    stack: [
+      'Java 21',
+      'Spring Boot 3.5',
+      'PostgreSQL',
+      'Flyway',
+      'Spring Security',
+      'JWT + OAuth',
+      'React 18',
+      'TypeScript',
+      'Paystack',
+      'ZXing',
+      'Cloudinary',
+      'Groq / LLaMA',
+      'Docker',
+    ],
+    metrics: [
+      { value: '15', label: 'REST controllers' },
+      { value: '22', label: 'Flyway migrations' },
+      { value: '149', label: 'Java source files' },
+    ],
+    links: [
+      {
+        kind: 'live',
+        label: 'Live demo',
+        href: 'https://event-main-eight.vercel.app',
+      },
+      {
+        kind: 'repo',
+        label: 'GitHub · Backend',
+        repo: {
+          name: 'EventMainBackend',
+          url: 'https://github.com/AdamuSulaiman-Codes/EventMainBackend',
+          visibility: 'private',
+        },
+      },
+      {
+        kind: 'repo',
+        label: 'GitHub · Frontend',
+        repo: {
+          name: 'EventMain',
+          url: 'https://github.com/AdamuSulaiman-Codes/EventMain',
+          visibility: 'private',
+        },
+      },
+    ],
+    media: {
+      type: 'image',
+      src: '/work/eventhub.png',
+      alt: 'The EventHub sign-in screen, showing the product name beside the line: organise events, manage guests, and get paid, all in one place.',
+      width: 1440,
+      height: 1000,
+    },
+    flagship: true,
+  },
+  {
+    id: 'peak-hours',
+    index: '02',
+    name: 'Peak Hours',
+    year: '2025 — 2026',
+    role: 'Independent product · React Native / Expo',
+    kicker:
+      'An offline-first focus timer built around a countdown that survives the app being force-quit.',
+    body: 'Most focus timers quietly lose time when the phone locks or the app is killed. Peak Hours derives its countdown from a persisted end timestamp instead of a running interval, so a session stays accurate through backgrounding, locking and force-quit, and is reconciled the moment the app reopens.',
+    details: [
+      'A 60fps eased countdown ring with springy numeral ticks and a breathing cue through the final ten seconds.',
+      'An Android home-screen widget that shows today’s focus minutes and any running session, refreshed on every session change.',
+      'Reports by project for today, this week and all time, with goal tracking and streaks that keep history after a project is archived.',
+      'Local notifications plus an optional daily reminder. No accounts, no backend, and nothing leaves the device.',
+    ],
+    stack: [
+      'React Native',
+      'Expo SDK 57',
+      'TypeScript',
+      'Reanimated',
+      'React Native SVG',
+      'AsyncStorage',
+      'expo-notifications',
+      'expo-audio',
+      'expo-haptics',
+      'Android Widgets',
+    ],
+    metrics: [
+      { value: '13', label: 'app screens' },
+      { value: '58', label: 'components' },
+      { value: '23', label: 'test files' },
+    ],
+    links: [
+      { kind: 'live', label: 'peakhours.online', href: 'https://peakhours.online' },
+      {
+        kind: 'repo',
+        label: 'GitHub',
+        repo: {
+          name: 'Peak-Hours',
+          url: 'https://github.com/AdamuSulaiman-Codes/Peak-Hours',
+          visibility: 'private',
+        },
+      },
+    ],
+    media: {
+      type: 'image',
+      src: '/work/peakhours.png',
+      alt: 'The Peak Hours landing page: a headline reading “Meet Ghost. It’s you, yesterday.” beside a lavender ghost character and a waitlist sign-up form.',
+      width: 1440,
+      height: 1000,
     },
   },
   {
-    name: 'FlashGenius',
-    slug: 'flashgenius',
-    stack: ['React', 'TypeScript', 'LLM API'],
-    points: [
-      'An AI study companion that turns any content into learning material — flashcards, summaries, and structured reports generated by an LLM backend.',
-      'Interactive flashcard quiz system with flip animations, deck management, and progress tracking; AI generation turns a topic description into fully populated study cards.',
-    ],
-    repo: '#',
-    code: {
-      path: '~/flashgenius/src/hooks/useDeck.ts',
-      lines: [
-        '// describe a topic, get a full deck back',
-        'export async function generateDeck(topic: string) {',
-        '  const res = await llm.complete(',
-        '    "Make 10 Q/A cards on: " + topic);',
-        '  const cards = parseCards(res);',
-        '  deckStore.add({ topic, cards });',
-        '  return cards;',
-        '}',
-        '',
-        '// session review — flip + track progress',
-        'const review = useSession(cards);',
-        'review.flip(); review.markKnown();',
-      ],
-    },
-  },
-  {
-    name: 'LifeLog',
-    slug: 'lifelog',
-    stack: ['Spring Boot', 'Telegram Bot API', 'PostgreSQL', 'Groq', 'React', 'Google Cloud Run'],
-    points: [
-      'Telegram bot that captures daily personal logs (tasks, expenses, notes) and classifies them via the Groq API.',
-      'Backed by a Spring Boot REST API, PostgreSQL, and a companion React dashboard.',
-      'Deployed the full system to Google Cloud Run, resolving environment-configuration issues along the way.',
-    ],
-    repo: '#',
-    code: {
-      path: '~/lifelog/src/main/java/.../EntryController.java',
-      lines: [
-        '// a Telegram message arrives → classify & store',
-        '@PostMapping("/telegram/webhook")',
-        'public void onUpdate(@RequestBody Update u) {',
-        '  Entry e = Entry.fromTelegram(u);',
-        '  Category c = groq.classify(e.text);',
-        '  entryRepo.save(e.withCategory(c));',
-        '  reminder.scheduleFor(e, u);',
-        '}',
-      ],
-    },
-  },
-  {
-    name: 'Premier League Predictor',
-    slug: 'predictor',
-    stack: ['Python', 'scikit-learn', 'Monte Carlo'],
-    points: [
-      'Season-outcome predictor for the Premier League using Monte Carlo simulation over match-outcome probabilities from a regression model.',
-      'Built as an applied project alongside a structured scikit-learn course.',
-    ],
-    repo: '#',
-    code: {
-      path: '~/predictor/simulate.py',
-      lines: [
-        '# run 10,000 season simulations',
-        'def simulate_season(model, fixtures):',
-        '    table = {t: 0 for t in TEAMS}',
-        '    for m in fixtures:',
-        '        p = model.predict_proba(m)',
-        '        outcome = sample_outcome(p)',
-        '        table = apply_result(table, m, outcome)',
-        '    return sorted(table, key=lambda t: -table[t])',
-        '',
-        'winners = [simulate_season(m, f)',
-        '            for _ in range(10_000)]',
-      ],
-    },
-  },
-  {
-    name: 'Frame Text Copy',
-    slug: 'frametext',
-    stack: ['JavaScript', 'OCR', 'Chrome Extension'],
-    points: [
-      'Chrome extension that lets users pause any video (e.g. YouTube) and extract or copy on-screen text from the frame using OCR.',
-    ],
-    repo: '#',
-    code: {
-      path: '~/frame-text-copy/content/ocr.js',
-      lines: [
-        '// grab the paused frame, pull the text out',
-        'async function extractFrameText(tabId) {',
-        '  const shot = await chrome.tabs.captureVisibleTab(tabId);',
-        '  const blob = await (await fetch(shot)).blob();',
-        '  const { data } = await Tesseract.recognize(blob, "eng");',
-        '  return data.text.trim();',
-        '}',
-      ],
-    },
-  },
-]
-
-export interface ExpItem {
-  year: string
-  role: string
-  org: string
-  bullets: string[]
-}
-
-export const EXPERIENCE: ExpItem[] = [
-  {
+    id: 'issuepacket',
+    index: '03',
+    name: 'IssuePacket',
     year: '2025',
-    role: 'Software Engineering Intern',
-    org: 'Flexisaf EduSoft · Abuja, Nigeria',
-    bullets: [
-      'Hands-on internship at one of Nigeria\u2019s leading EdTech companies, deepening React component architecture and the @flexibull2 design system.',
-      'Learned how production APIs are designed, maintained, and integrated with frontends.',
-      'Contributed real fixes and features to the Schools Distinction App under senior engineers.',
+    role: 'Independent tool · TypeScript monorepo',
+    kicker:
+      'A local web app and Chrome extension that turn a broken page into a developer-ready bug report.',
+    body: 'A useful bug report means reproducing the problem, then describing it well enough that someone else can act on it. IssuePacket records the steps as they happen in the browser, attaches only the diagnostics that matter, and packages the result into a handoff a developer can work from.',
+    details: [
+      'Extension capture with explicit controls and opt-in diagnostics and screenshots — nothing is recorded until it is asked for.',
+      'Text redaction and evidence removal before a report is exported, so secrets do not travel with the bug.',
+      'Exports to JSON, Markdown or a portable ZIP, alongside a copyable investigation prompt for an AI assistant.',
+      'Runs entirely on IndexedDB with enforced library limits. No backend, no accounts, no uploads.',
+    ],
+    stack: [
+      'TypeScript',
+      'React',
+      'Vite',
+      'Chrome MV3',
+      'IndexedDB',
+      'Node 22',
+      'GitHub Actions',
+    ],
+    metrics: [
+      { value: '7', label: 'shipped MVP batches' },
+      { value: '21', label: 'test files' },
+      { value: '0', label: 'bytes sent to a server' },
+    ],
+    links: [
+      {
+        kind: 'repo',
+        label: 'GitHub',
+        repo: {
+          name: 'IssuePacket',
+          url: 'https://github.com/AdamuSulaiman-Codes/IssuePacket',
+          visibility: 'private',
+        },
+      },
+    ],
+    media: {
+      type: 'code',
+      path: 'apps/extension/src/capture-model.ts',
+      lang: 'typescript',
+      lines: [
+        'export function appendEvent(',
+        '  session: CaptureSession,',
+        "  category: CaptureEvent['category'],",
+        '  summary: string,',
+        '): boolean {',
+        '  if (session.events.length >= CAPTURE_LIMITS.events)',
+        '    return false;',
+        '',
+        '  session.events.push({',
+        '    id: crypto.randomUUID(),',
+        '    elapsedMs: Date.now() - Date.parse(session.startedAt),',
+        '    category,',
+        '    summary: sanitizeText(summary, 2000),',
+        '    url: sanitizeUrl(url),',
+        "    origin: 'observed',",
+        '  });',
+        '  return true;',
+        '}',
+      ],
+    },
+  },
+  {
+    id: 'lifelog',
+    index: '04',
+    name: 'LifeLog',
+    year: '2025',
+    role: 'Personal system · Spring Boot + React',
+    kicker:
+      'A Telegram bot that sorts your day into four domains and keeps the streaks for you.',
+    body: 'Send the bot a message about your day. A language model decides whether it is a journal entry, a job application, a note or a practice problem, and asks you to confirm before anything is stored — so the classification is a suggestion, not a verdict.',
+    details: [
+      'Groq-backed classification with calibrated confidence: ambiguous messages are surfaced for a decision rather than silently filed.',
+      'Job tracking that watches the inbox and moves applications through applied, interview, offer and rejected, with an undo on every change.',
+      'Spaced repetition on a 1, 3, 7, 14, 30 and 60-day schedule for coding problems, plus a journal streak with a single grace day.',
+      'A React dashboard over a small REST API, with the whole system deployed to Google Cloud Run.',
+    ],
+    stack: [
+      'Java',
+      'Spring Boot',
+      'PostgreSQL',
+      'Telegram Bot API',
+      'Groq / LLaMA',
+      'Gmail API',
+      'React',
+      'TypeScript',
+      'Google Cloud Run',
+    ],
+    metrics: [
+      { value: '4', label: 'classification domains' },
+      { value: '6', label: 'review intervals' },
+      { value: '2h', label: 'inbox poll interval' },
+    ],
+    links: [
+      {
+        kind: 'repo',
+        label: 'GitHub · Backend',
+        repo: {
+          name: 'LifeLog',
+          url: 'https://github.com/AdamuSulaiman-Codes/LifeLog',
+          visibility: 'public',
+        },
+      },
+      {
+        kind: 'repo',
+        label: 'GitHub · Frontend',
+        repo: {
+          name: 'LifeLogFrontend',
+          url: 'https://github.com/AdamuSulaiman-Codes/LifeLogFrontend',
+          visibility: 'public',
+        },
+      },
+    ],
+    media: {
+      type: 'code',
+      path: 'src/main/java/…/service/ClassificationService.java',
+      lang: 'java',
+      lines: [
+        'private static final String SYSTEM_PROMPT = """',
+        '  You classify messages for a personal logging system',
+        '  with exactly four domains.',
+        '',
+        '  - "journal": genuine personal reflection — an emotional',
+        '    reaction, or narrating something that happened WITH',
+        '    personal commentary attached.',
+        '',
+        '  - "job": ONLY tracking a job APPLICATION or interview',
+        '    process — company, role, and status.',
+        '',
+        '  - "note": reminders, bookmarks, quotes, bare facts, or',
+        '    unclear text. This is the safe default domain.',
+        '',
+        '  - "practice": the user solved or reviewed a coding or',
+        '    interview practice problem.',
+        '',
+        '  CONFIDENCE CALIBRATION:',
+        '  - Gibberish or genuine uncertainty → below 0.5.',
+        '  - Only go above 0.8 when the domain is unambiguous.',
+        '""";',
+      ],
+    },
+  },
+  {
+    id: 'predictor',
+    index: '05',
+    name: 'Premier League Predictor',
+    year: '2025',
+    role: 'Applied modelling · Python',
+    kicker:
+      'A Monte Carlo season simulator running on per-match goal models fitted to a decade of results.',
+    body: 'The predictor plays out a full season thousands of times over. Each fixture gets goals drawn from two fitted Poisson models, adjusted by an Elo rating carried across matches, and the resulting tables accumulate into a distribution of where each club is likely to finish.',
+    details: [
+      'Separate Poisson models for home and away goals, with a tuned Elo baseline and rolling form features including shots on target and rest days.',
+      'Ten Premier League seasons of raw match data (2016/17 to 2025/26) used for training, with a synthetic bookmaker prior standing in for odds on unplayed fixtures.',
+      'Runs thousands of simulated seasons per call and writes finishing-position distributions to a results file.',
+      'Exploration notebooks, saved model artifacts and a Streamlit interface for running simulations and reading the output.',
+    ],
+    stack: [
+      'Python',
+      'scikit-learn',
+      'pandas',
+      'NumPy',
+      'Poisson models',
+      'Elo ratings',
+      'Jupyter',
+      'Streamlit',
+    ],
+    metrics: [
+      { value: '10', label: 'seasons of data' },
+      { value: '1,000+', label: 'seasons per run' },
+      { value: '2', label: 'fitted goal models' },
+    ],
+    links: [
+      {
+        kind: 'repo',
+        label: 'GitHub',
+        repo: {
+          name: 'pl-predictor',
+          url: 'https://github.com/AdamuSulaiman-Codes/pl-predictor',
+          visibility: 'public',
+        },
+      },
+    ],
+    media: {
+      type: 'code',
+      path: 'simulator.py',
+      lang: 'python',
+      lines: [
+        'def market_probs(self, home_elo, away_elo):',
+        '    """Synthetic bookmaker prior from Elo (no real',
+        '    odds for future games)."""',
+        '    dr = (home_elo + self.HOME_ADV) - away_elo',
+        '    p_home = 1 / (1 + 10 ** (-(dr - self.DRAW_MARGIN) / 400))',
+        '    p_away = 1 / (1 + 10 ** ((dr + self.DRAW_MARGIN) / 400))',
+        '    p_draw = max(0.0, 1 - p_home - p_away)',
+        '    total = p_home + p_draw + p_away',
+        '    return p_home / total, p_away / total',
+        '',
+        '# a single match, then a whole season, then a',
+        '# thousand seasons — goals drawn per fixture',
+        'gh = max(0, int(rng.poisson(lam_home)))',
+        'ga = max(0, int(rng.poisson(lam_away)))',
+      ],
+    },
+  },
+]
+
+/* ── Experience & education ──────────────────────────────────────────────── */
+
+export interface TimelineItem {
+  period: string
+  title: string
+  org: string
+  location?: string
+  points: string[]
+  kind: 'work' | 'education'
+}
+
+export const TIMELINE: TimelineItem[] = [
+  {
+    period: '2025',
+    title: 'Software Engineering Intern',
+    org: 'Flexisaf EduSoft',
+    location: 'Abuja, Nigeria',
+    kind: 'work',
+    points: [
+      'Contributed fixes and features to the Schools Distinction application under senior engineers.',
+      'Worked inside the team’s React component architecture and internal design system, and learned how production APIs are versioned, documented and integrated.',
+      'Reviewed my own work against the standards the rest of the team held, which is where the habit of documenting decisions came from.',
     ],
   },
   {
-    year: '2022 — 2026',
-    role: 'Full-Stack Developer · Academic Projects',
-    org: 'Skyline University Nigeria · Kano, Nigeria',
-    bullets: [
-      'Designed, developed, and deployed full-stack systems across Java/Spring Boot and React/TypeScript stacks.',
-      'Explored WebSockets with STOMP and Spring Boot for real-time collaborative features.',
-      'Undergraduate research: EventHub — secure event management with payments, QR-ticketing, and AI feedback analysis.',
+    period: '2022 — 2026',
+    title: 'Undergraduate research & independent builds',
+    org: 'Skyline University Nigeria',
+    location: 'Kano, Nigeria',
+    kind: 'work',
+    points: [
+      'Designed, built and deployed full-stack systems across Java, Spring Boot, React and TypeScript.',
+      'Final-year research: EventHub, a secure event platform with payment settlement, QR ticketing and language-model feedback analysis, supervised by Mr. Alex Aaron.',
+      'Built real-time collaborative features with WebSockets and STOMP, and shipped independent products outside coursework.',
+    ],
+  },
+  {
+    period: '2022 — 2026',
+    title: 'B.Sc. Software Engineering',
+    org: 'Skyline University Nigeria',
+    location: 'Kano, Nigeria',
+    kind: 'education',
+    points: [
+      'Coursework across algorithms and data structures, databases, software architecture, security and distributed systems.',
+      'Final-year project and dissertation: EventHub — an event management platform built end to end.',
     ],
   },
 ]
 
-export interface SkillTag {
-  name: string
-  hot?: boolean
-}
+/* ── Toolkit ─────────────────────────────────────────────────────────────── */
 
 export interface SkillGroup {
-  name: string
-  heading: string
-  items: SkillTag[]
+  group: string
+  items: string[]
 }
 
-export const SKILLS: SkillGroup[] = [
+export const TOOLKIT: SkillGroup[] = [
   {
-    name: 'LANGUAGES',
-    heading: 'Core',
+    group: 'Languages',
+    items: ['Java', 'TypeScript', 'JavaScript', 'Python', 'SQL', 'HTML', 'CSS'],
+  },
+  {
+    group: 'Backend',
     items: [
-      { name: 'Java', hot: true },
-      { name: 'TypeScript', hot: true },
-      { name: 'JavaScript', hot: true },
-      { name: 'SQL' },
-      { name: 'Python' },
-      { name: 'HTML5' },
-      { name: 'CSS3' },
+      'Spring Boot',
+      'Spring Security',
+      'Spring Data JPA',
+      'Hibernate',
+      'REST APIs',
+      'WebSockets (STOMP)',
+      'Flyway',
     ],
   },
   {
-    name: 'FRONTEND',
-    heading: 'React ecosystem',
+    group: 'Frontend',
     items: [
-      { name: 'React 18', hot: true },
-      { name: 'Vite' },
-      { name: 'Tailwind CSS' },
-      { name: 'Redux Toolkit' },
-      { name: 'RTK Query' },
-      { name: 'React Query' },
-      { name: 'React Hook Form' },
-      { name: 'Zod' },
+      'React 18',
+      'Vite',
+      'Tailwind CSS',
+      'Redux Toolkit',
+      'RTK Query',
+      'TanStack Query',
+      'React Hook Form',
+      'Zod',
+      'React Native',
+      'Expo',
     ],
   },
   {
-    name: 'BACKEND',
-    heading: 'Java · Spring',
+    group: 'Data & cloud',
     items: [
-      { name: 'Spring Boot', hot: true },
-      { name: 'Spring Security' },
-      { name: 'Spring Data JPA' },
-      { name: 'Hibernate' },
-      { name: 'REST APIs' },
-      { name: 'WebSockets (STOMP)' },
+      'PostgreSQL',
+      'MySQL',
+      'Supabase',
+      'Docker',
+      'Google Cloud Run',
+      'Railway',
+      'Cloudinary',
     ],
   },
   {
-    name: 'AI / ML',
-    heading: 'Intelligence',
+    group: 'AI & modelling',
     items: [
-      { name: 'LangChain4j', hot: true },
-      { name: 'Groq LLaMA 3.3', hot: true },
-      { name: 'Sentiment Analysis' },
-      { name: 'AI Generation' },
+      'Groq / LLaMA',
+      'LangChain4j',
+      'scikit-learn',
+      'pandas',
+      'Prompt design',
+      'Sentiment analysis',
     ],
   },
   {
-    name: 'DATA · CLOUD',
-    heading: 'Infrastructure',
+    group: 'Security & quality',
     items: [
-      { name: 'PostgreSQL', hot: true },
-      { name: 'MySQL' },
-      { name: 'Supabase' },
-      { name: 'Cloudinary' },
-      { name: 'Railway' },
-      { name: 'Docker' },
-    ],
-  },
-  {
-    name: 'SECURITY · QA',
-    heading: 'Shipped clean',
-    items: [
-      { name: 'JWT', hot: true },
-      { name: 'HMAC-SHA512' },
-      { name: 'BCrypt' },
-      { name: 'RBAC' },
-      { name: 'Paystack', hot: true },
-      { name: 'JUnit · Mockito' },
-      { name: 'REST-assured' },
-      { name: 'React Testing Library' },
+      'JWT',
+      'OAuth 2.0',
+      'HMAC-SHA512',
+      'BCrypt',
+      'Role-based access control',
+      'Paystack',
+      'JUnit',
+      'Mockito',
+      'REST-assured',
+      'React Testing Library',
     ],
   },
 ]
 
-export const VILLAIN: Record<SectionId, string> = {
-  about: 'The origin story. Classified, obviously.',
-  skills: 'My arsenal. Handle with care — it took years to assemble.',
-  projects: 'Behold, my greatest creations. Screenshots pending approval.',
-  experience: 'Every villain has a humble beginning. This is mine.',
-}
+/* ── Contact ─────────────────────────────────────────────────────────────── */
 
-export const SECTION_HEADS: Record<SectionId, { mono: string; title: string; blurb: string }> = {
-  about: { mono: '01 — ABOUT', title: 'Engineer by training, builder by habit.', blurb: VILLAIN.about },
-  projects: { mono: '02 — CREATIONS', title: 'Work I have built end to end.', blurb: VILLAIN.projects },
-  experience: { mono: '03 — ORIGIN LOG', title: 'Where I have worked and built.', blurb: VILLAIN.experience },
-  skills: { mono: '04 — THE ARSENAL', title: 'The stack I ship with.', blurb: VILLAIN.skills },
-}
+export const CONTACT_LEAD =
+  'I am looking for graduate and internship roles starting in 2026 — backend, full-stack or platform engineering.'
 
-export const CONTACT_BLURB =
-  "I'm open to full-stack roles, internships, and interesting builds in 2026. If you have a project or a team that needs a careful engineer, my inbox is open."
+export const CONTACT_BODY =
+  'If you are hiring, or you want to talk through how any of the projects above were built, email is the fastest way to reach me. I answer every message.'
+
+export const NAV_ITEMS = [
+  { id: 'work', label: 'Work' },
+  { id: 'about', label: 'About' },
+  { id: 'experience', label: 'Experience' },
+  { id: 'toolkit', label: 'Toolkit' },
+  { id: 'contact', label: 'Contact' },
+]
